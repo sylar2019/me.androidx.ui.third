@@ -1,39 +1,12 @@
-/** ******************************************************************************************/
-/** ******************************************************************************************/
+apply from: rootProject.rootDir.getAbsolutePath() + "/gradles/const.gradle"
+apply from: rootProject.rootDir.getAbsolutePath() + "/gradles/utils.gradle"
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file("local.properties").newDataInputStream())
-ext {
-    nexus_repo_3rd = properties.getProperty("nexus_repo_3rd")
-    repoUser = properties.getProperty("nexus_user")
-    repoPwd = properties.getProperty("nexus_pwd")
-}
-
-ext {
-    //统一定义android sdk 版本
-//    buildToolsVersion = "23.0.3"
-//    minSdkVersion = 23
-//    targetSdkVersion = 23
-//    compileSdkVersion = 23
-    supportV4 = "com.android.support:support-v4:23.0.1"
-}
-
-ext {
-    //统一定义依赖组件版本号
-    guavaVersion = '19.0'
-    jacksonVersion = "2.8.1"
-}
-
-/** ******************************************************************************************/
 /** ******************************************************************************************/
 
 /**
  * 编译脚本
  */
 buildscript {
-    ext {
-    }
-
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
@@ -49,9 +22,6 @@ buildscript {
 /** ******************************************************************************************/
 /** ******************************************************************************************/
 
-/**
- * 根项目
- */
 allprojects {
     //公共插件
     apply plugin: "eclipse"
@@ -69,17 +39,19 @@ allprojects {
     }
 }
 
-/**
- * 所有模块项目
- */
 subprojects {
+    apply from: gradlesPath + "const.gradle"
+    apply from: gradlesPath + "utils.gradle"
+}
 
-    //上传到nexus
-     uploadArchives {
+configure(isJavaProject()) {
+    apply from: gradlesPath + "android-lib.gradle"
+
+    uploadArchives {
         repositories {
             mavenDeployer {
-                repository(url: "${nexus_repo_3rd}") {
-                    authentication(userName: "${repoUser}", password: "${repoPwd}")
+                repository(url: "${nexus_third}") {
+                    authentication(userName: "${nexus_user}", password: "${nexus_pwd}")
                 }
 
                 pom.groupId = "${project.group}"
@@ -87,91 +59,6 @@ subprojects {
                 pom.packaging = "aar"
             }
         }
-    }
-}
-
-/** ******************************************************************************************/
-/** ******************************************************************************************/
-
-configure(isJavaProject()) {
-
-    apply plugin: "com.android.library"
-
-    //JVM 版本号要求
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    dependencies {
-        implementation fileTree(dir: 'libs', include: ['*.jar'])
-        implementation supportV4
-    }
-
-    android {
-        compileSdkVersion 26
-        buildToolsVersion "28.0.3"
-
-        defaultConfig {
-            minSdkVersion 23
-            targetSdkVersion 26
-            versionCode 100
-            versionName "1.0.0"
-        }
-
-        buildTypes {
-            release {
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            }
-        }
-
-        lintOptions {
-            abortOnError false
-        }
-
-        packagingOptions {
-            exclude 'META-INF/DEPENDENCIES.txt'
-            exclude 'META-INF/LICENSE.txt'
-            exclude 'META-INF/NOTICE.txt'
-            exclude 'META-INF/NOTICE'
-            exclude 'META-INF/LICENSE'
-            exclude 'META-INF/DEPENDENCIES'
-            exclude 'META-INF/notice.txt'
-            exclude 'META-INF/license.txt'
-            exclude 'META-INF/dependencies.txt'
-            exclude 'META-INF/LGPL2.1'
-        }
-    }
-
-}
-
-/** ******************************************************************************************/
-/** ******************************************************************************************/
-
-def isProjectEndsWith(suffix) {
-    return subprojects.findAll {
-        it.name.endsWith(suffix)
-    }
-}
-
-def isParentEquals(parentName) {
-    return subprojects.findAll {
-        it.parent != null && it.parent.name == parentName
-    }
-}
-
-def isProjectEquals(projectName) {
-    return subprojects.findAll {
-        it.name == projectName
-    }
-}
-
-/**
- * 是否是可编译的代码模块
- * @return
- */
-def isJavaProject() {
-    return subprojects.findAll {
-        it.childProjects.size() == 0 && new File(it.projectDir, "src").exists()
     }
 }
 

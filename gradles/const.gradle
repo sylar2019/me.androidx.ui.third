@@ -1,0 +1,30 @@
+Properties localProperties = new Properties()
+localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+ext {
+    //定义maven 私服账号
+    nexus_snapshots = localProperties.getProperty("nexus_snapshots")
+    nexus_third = localProperties.getProperty("nexus_third")
+    nexus_user = localProperties.getProperty("nexus_user")
+    nexus_pwd = localProperties.getProperty("nexus_pwd")
+}
+
+ext {
+    gradlesPath = rootProject.rootDir.getAbsolutePath() + "/gradles/"
+}
+
+
+ext {
+    //统一定义android sdk 版本
+    buildToolsVersion = "28.0.3"
+    minSdkVersion = 23
+    targetSdkVersion = 23
+    compileSdkVersion = 23
+    supportV4 = "com.android.support:support-v4:23.0.1"
+}
+
+ext {
+    //统一定义依赖组件版本号
+    guavaVersion = '19.0'
+    jacksonVersion = "2.9.7"
+}

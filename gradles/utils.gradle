@@ -1,0 +1,30 @@
+ext {
+    isJavaProject = this.&isJavaProject
+    isParentEquals = this.&isParentEquals
+    isProjectEndsWith = this.&isProjectEndsWith
+    isProjectEquals = this.&isProjectEquals
+}
+
+def isParentEquals(parentName) {
+    return subprojects.findAll {
+        it.parent != null && it.parent.name == parentName
+    }
+}
+
+def isProjectEndsWith(suffix) {
+    return subprojects.findAll {
+        it.name.endsWith(suffix)
+    }
+}
+
+def isProjectEquals(projectName) {
+    return subprojects.findAll {
+        it.name == projectName
+    }
+}
+
+def isJavaProject() {
+    return subprojects.findAll {
+        it.childProjects.size() == 0 && new File(it.projectDir, "src").exists()
+    }
+}
