@@ -1,0 +1,10 @@
+uploadArchives {
+     repositories {
+         mavenDeployer {
+             pom.artifactId = "com.actionbarsherlock"
+             pom.version = "4.4.0"
+         }
+     }
+ }
+
+

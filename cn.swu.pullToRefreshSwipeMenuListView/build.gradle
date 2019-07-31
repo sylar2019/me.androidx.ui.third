@@ -1,0 +1,10 @@
+ uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.artifactId = "cn.swu.pulltorefreshswipemenulistview"
+            pom.version = "1.0.0"
+        }
+    }
+}
+
+

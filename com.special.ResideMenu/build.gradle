@@ -1,0 +1,10 @@
+ uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.artifactId = "com.special.ResideMenu"
+            pom.version = "1.4.2"
+        }
+    }
+}
+
+

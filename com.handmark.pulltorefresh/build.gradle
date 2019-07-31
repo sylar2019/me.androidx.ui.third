@@ -1,0 +1,8 @@
+ uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.artifactId = "com.handmark.pulltorefresh"
+            pom.version = "2.1.1"
+        }
+    }
+}

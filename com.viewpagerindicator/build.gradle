@@ -1,0 +1,9 @@
+ uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.artifactId = "com.viewpagerindicator"
+            pom.version = "2.4.1"
+        }
+    }
+}
+

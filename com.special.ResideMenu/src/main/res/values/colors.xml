@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="common_pressed_background">#f78529</color>
+
+    <color name="residemenu_item_white">#40ffffff</color>
+
+</resources>
