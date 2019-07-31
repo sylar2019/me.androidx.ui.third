@@ -2,7 +2,7 @@ rootProject.name = "me.android.third"
 
 include ":cn.swu.pullToRefreshSwipeMenuListView"
 include ":cn.trinea.android.view.autoscrollviewpager"
-//include ":com.actionbarsherlock"
+include ":com.actionbarsherlock"
 include ":com.baoyz.swipemenulistview"
 include ":com.etsy.android.grid"
 include ":com.handmark.pulltorefresh"

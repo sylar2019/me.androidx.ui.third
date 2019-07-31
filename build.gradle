@@ -11,10 +11,10 @@ ext {
 
 ext {
     //统一定义android sdk 版本
-    buildToolsVersion = "23.0.1"
-    minSdkVersion = 14
-    targetSdkVersion = 23
-    compileSdkVersion = 23
+//    buildToolsVersion = "23.0.3"
+//    minSdkVersion = 23
+//    targetSdkVersion = 23
+//    compileSdkVersion = 23
     supportV4 = "com.android.support:support-v4:23.0.1"
 }
 
@@ -102,16 +102,16 @@ configure(isJavaProject()) {
     targetCompatibility = 1.8
 
     dependencies {
-        compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile supportV4
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
+        implementation supportV4
     }
 
     android {
         compileSdkVersion 26
-        buildToolsVersion "23.0.3"
+        buildToolsVersion "28.0.3"
 
         defaultConfig {
-            minSdkVersion 14
+            minSdkVersion 23
             targetSdkVersion 26
             versionCode 100
             versionName "1.0.0"
