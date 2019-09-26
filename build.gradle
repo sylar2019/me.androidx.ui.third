@@ -8,6 +8,7 @@ apply from: rootProject.rootDir.getAbsolutePath() + "/gradles/utils.gradle"
  */
 buildscript {
     repositories {
+        mavenLocal()
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
@@ -15,7 +16,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.4.2"
+        classpath "com.android.tools.build:gradle:3.5.0"
     }
 }
 
@@ -32,6 +33,7 @@ allprojects {
     version "1.0.0"
 
     repositories {
+        mavenLocal()
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
