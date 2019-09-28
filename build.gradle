@@ -3,6 +3,17 @@ apply from: rootProject.rootDir.getAbsolutePath() + "/gradles/utils.gradle"
 
 /** ******************************************************************************************/
 
+ext {
+    androidBuildToolsVersion = "29.0.1"
+    androidSupportV4 = "23.0.1"
+    androidAppcompatV7 = "28.0.0"
+    androidMinSdkVersion = 26
+    androidTargetSdkVersion = 26
+    androidCompileSdkVersion = 26
+}
+
+/** ******************************************************************************************/
+
 /**
  * 编译脚本
  */
@@ -44,10 +55,6 @@ allprojects {
 subprojects {
     apply from: gradlesPath + "const.gradle"
     apply from: gradlesPath + "utils.gradle"
-}
-
-configure(isJavaProject()) {
-    apply from: gradlesPath + "android-lib.gradle"
 
     uploadArchives {
         repositories {
@@ -61,6 +68,14 @@ configure(isJavaProject()) {
                 pom.packaging = "aar"
             }
         }
+    }
+}
+
+configure(isJavaProject()) {
+    apply from: gradlesPath + "android-lib.gradle"
+
+    dependencies {
+        api "com.android.support:support-v4:" + rootProject.ext.androidSupportV4
     }
 }
 

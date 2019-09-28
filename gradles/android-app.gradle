@@ -6,17 +6,18 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation supportV4
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api "com.android.support:support-v4:" + rootProject.ext.androidSupportV4
+    api "com.android.support:appcompat-v7:" + rootProject.ext.androidAppcompatV7
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "28.0.3"
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    buildToolsVersion rootProject.ext.androidBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 26
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
         versionCode 100
         versionName "1.0.0"
     }
@@ -24,7 +25,6 @@ android {
     sourceSets {
         main {
             assets.srcDirs = ['src/main/assets', 'src/main/assets/']
-            jniLibs.srcDirs = ['libs']
         }
     }
 

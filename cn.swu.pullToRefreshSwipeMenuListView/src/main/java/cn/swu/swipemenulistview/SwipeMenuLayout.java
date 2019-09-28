@@ -1,5 +1,6 @@
 package cn.swu.swipemenulistview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.widget.ScrollerCompat;
@@ -70,6 +71,7 @@ public class SwipeMenuLayout extends FrameLayout {
         mMenuView.setPosition(position);
     }
 
+    @SuppressLint("ResourceType")
     private void init() {
         setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         mGestureListener = new SimpleOnGestureListener() {
@@ -142,7 +144,7 @@ public class SwipeMenuLayout extends FrameLayout {
             swipe(dis);
             break;
         case MotionEvent.ACTION_UP:
-            if (isFling || (mDownX - event.getX()) > (mMenuView.getWidth() / 2)) {
+            if (isFling || (mDownX - event.getX()) > (mMenuView.getWidth() / 2f)) {
                 // open
                 smoothOpenMenu();
             } else {
@@ -159,10 +161,10 @@ public class SwipeMenuLayout extends FrameLayout {
         return state == STATE_OPEN;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        return super.onTouchEvent(event);
+//    }
 
     private void swipe(int dis) {
         if (dis > mMenuView.getWidth()) {
