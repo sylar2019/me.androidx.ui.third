@@ -28,13 +28,14 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewConfigurationCompat;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.ViewConfigurationCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 
@@ -81,7 +82,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
         public final int value;
 
-        private IndicatorStyle(int value) {
+        IndicatorStyle(int value) {
             this.value = value;
         }
 
@@ -100,7 +101,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
         public final int value;
 
-        private LinePosition(int value) {
+        LinePosition(int value) {
             this.value = value;
         }
 

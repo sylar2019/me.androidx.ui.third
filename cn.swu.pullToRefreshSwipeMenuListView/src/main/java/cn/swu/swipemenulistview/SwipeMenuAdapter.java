@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.WrapperListAdapter;
+
 import cn.swu.pulltorefreshswipemenulistview.PullToRefreshSwipeMenuListView;
 import cn.swu.pulltorefreshswipemenulistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
 import cn.swu.swipemenulistview.SwipeMenuView.OnSwipeItemClickListener;

@@ -15,8 +15,6 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
-import com.handmark.pulltorefresh.R;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build.VERSION;
@@ -24,6 +22,8 @@ import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.HorizontalScrollView;
+
+import com.handmark.pulltorefresh.R;
 
 public class PullToRefreshHorizontalScrollView extends PullToRefreshBase<HorizontalScrollView> {
 

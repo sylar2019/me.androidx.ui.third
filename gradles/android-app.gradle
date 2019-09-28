@@ -7,8 +7,6 @@ targetCompatibility = 1.8
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api "com.android.support:support-v4:" + rootProject.ext.androidSupportV4
-    api "com.android.support:appcompat-v7:" + rootProject.ext.androidAppcompatV7
 }
 
 android {

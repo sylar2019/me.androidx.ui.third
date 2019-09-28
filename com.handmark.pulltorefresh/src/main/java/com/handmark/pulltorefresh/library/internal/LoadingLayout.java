@@ -35,10 +35,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.R;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
-import com.handmark.pulltorefresh.R;
 
 @SuppressLint("ViewConstructor")
 public abstract class LoadingLayout extends FrameLayout implements
@@ -83,14 +83,14 @@ public abstract class LoadingLayout extends FrameLayout implements
 			break;
 		}
 
-		mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
-		mHeaderText = (TextView) mInnerLayout
+        mInnerLayout = findViewById(R.id.fl_inner);
+        mHeaderText = mInnerLayout
 				.findViewById(R.id.pull_to_refresh_text);
-		mHeaderProgress = (ProgressBar) mInnerLayout
+        mHeaderProgress = mInnerLayout
 				.findViewById(R.id.pull_to_refresh_progress);
-		mSubHeaderText = (TextView) mInnerLayout
+        mSubHeaderText = mInnerLayout
 				.findViewById(R.id.pull_to_refresh_sub_text);
-		mHeaderImage = (ImageView) mInnerLayout
+        mHeaderImage = mInnerLayout
 				.findViewById(R.id.pull_to_refresh_image);
 
 		FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mInnerLayout
@@ -211,13 +211,13 @@ public abstract class LoadingLayout extends FrameLayout implements
 	}
 
 	public final void setHeight(int height) {
-		ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) getLayoutParams();
+        ViewGroup.LayoutParams lp = getLayoutParams();
 		lp.height = height;
 		requestLayout();
 	}
 
 	public final void setWidth(int width) {
-		ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) getLayoutParams();
+        ViewGroup.LayoutParams lp = getLayoutParams();
 		lp.width = width;
 		requestLayout();
 	}

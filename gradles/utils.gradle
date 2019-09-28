@@ -1,8 +1,23 @@
 ext {
+    isLib = this.&isLib
+    isApp = this.&isApp
     isJavaProject = this.&isJavaProject
     isParentEquals = this.&isParentEquals
     isProjectEndsWith = this.&isProjectEndsWith
     isProjectEquals = this.&isProjectEquals
+}
+
+def isLib() {
+    Set result = isJavaProject()
+    result.removeAll(isApp())
+    return result
+}
+
+def isApp() {
+    Set result = isJavaProject()
+    result.retainAll(isParentEquals("app"))
+    result.retainAll(isProjectEndsWith("app"))
+    return result
 }
 
 def isParentEquals(parentName) {

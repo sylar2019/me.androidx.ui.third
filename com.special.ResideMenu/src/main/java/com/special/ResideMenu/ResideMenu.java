@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -71,15 +74,15 @@ public class ResideMenu extends FrameLayout {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.residemenu, this);
-		scrollViewLeftMenu = (ScrollView) findViewById(R.id.sv_left_menu);
-		scrollViewRightMenu = (ScrollView) findViewById(R.id.sv_right_menu);
-		imageViewShadow = (ImageView) findViewById(R.id.iv_shadow);
-		layoutLeftMenu = (LinearLayout) findViewById(R.id.layout_left_menu);
-		layoutRightMenu = (LinearLayout) findViewById(R.id.layout_right_menu);
-		imageViewBackground = (ImageView) findViewById(R.id.iv_background);
+        scrollViewLeftMenu = findViewById(R.id.sv_left_menu);
+        scrollViewRightMenu = findViewById(R.id.sv_right_menu);
+        imageViewShadow = findViewById(R.id.iv_shadow);
+        layoutLeftMenu = findViewById(R.id.layout_left_menu);
+        layoutRightMenu = findViewById(R.id.layout_right_menu);
+        imageViewBackground = findViewById(R.id.iv_background);
 
-		layout_left_top = (FrameLayout) findViewById(R.id.layout_left_top);
-		layout_right_top = (FrameLayout) findViewById(R.id.layout_right_top);
+        layout_left_top = findViewById(R.id.layout_left_top);
+        layout_right_top = findViewById(R.id.layout_right_top);
 
 		int menuWidth = getMenuMaxWidth();
 		setMenuWidth(menuWidth, DIRECTION_LEFT);
@@ -594,13 +597,13 @@ public class ResideMenu extends FrameLayout {
 		 * the method will call on the finished time of opening menu's
 		 * animation.
 		 */
-		public void openMenu();
+        void openMenu();
 
 		/**
 		 * the method will call on the finished time of closing menu's animation
 		 * .
 		 */
-		public void closeMenu();
+        void closeMenu();
 	}
 
 	// --------------------------------------------------------------------------

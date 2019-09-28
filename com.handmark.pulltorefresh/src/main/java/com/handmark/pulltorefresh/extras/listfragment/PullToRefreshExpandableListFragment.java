@@ -16,8 +16,9 @@
 package com.handmark.pulltorefresh.extras.listfragment;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+
+import androidx.fragment.app.ListFragment;
 
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 

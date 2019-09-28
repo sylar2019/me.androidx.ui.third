@@ -16,12 +16,13 @@
 package com.handmark.pulltorefresh.extras.listfragment;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
+import androidx.fragment.app.ListFragment;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
@@ -33,7 +34,7 @@ abstract class PullToRefreshBaseListFragment<T extends PullToRefreshBase<? exten
 	public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View layout = super.onCreateView(inflater, container, savedInstanceState);
 
-		ListView lv = (ListView) layout.findViewById(android.R.id.list);
+        ListView lv = layout.findViewById(android.R.id.list);
 		ViewGroup parent = (ViewGroup) lv.getParent();
 
 		// Remove ListView and add PullToRefreshListView in its place

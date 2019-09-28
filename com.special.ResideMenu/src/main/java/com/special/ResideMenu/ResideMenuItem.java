@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.special.ResideMenu.R;
 
 /**
  * User: special
@@ -42,8 +41,8 @@ public class ResideMenuItem extends LinearLayout{
     private void initViews(Context context){
         LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.residemenu_item, this);
-        iv_icon = (ImageView) findViewById(R.id.iv_icon);
-        tv_title = (TextView) findViewById(R.id.tv_title);
+        iv_icon = findViewById(R.id.iv_icon);
+        tv_title = findViewById(R.id.tv_title);
     }
 
     /**

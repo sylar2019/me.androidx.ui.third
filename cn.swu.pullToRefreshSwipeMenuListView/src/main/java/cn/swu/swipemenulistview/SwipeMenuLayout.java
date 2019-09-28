@@ -2,8 +2,6 @@ package cn.swu.swipemenulistview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -14,6 +12,9 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+
+import androidx.core.view.GestureDetectorCompat;
+import androidx.core.widget.ScrollerCompat;
 
 public class SwipeMenuLayout extends FrameLayout {
 
@@ -44,7 +45,7 @@ public class SwipeMenuLayout extends FrameLayout {
     }
 
     public SwipeMenuLayout(View contentView, SwipeMenuView menuView, Interpolator closeInterpolator,
-            Interpolator openInterpolator) {
+                           Interpolator openInterpolator) {
         super(contentView.getContext());
         mCloseInterpolator = closeInterpolator;
         mOpenInterpolator = openInterpolator;
@@ -131,28 +132,28 @@ public class SwipeMenuLayout extends FrameLayout {
     public boolean onSwipe(MotionEvent event) {
         mGestureDetector.onTouchEvent(event);
         switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            mDownX = (int) event.getX();
-            isFling = false;
-            break;
-        case MotionEvent.ACTION_MOVE:
-            // Log.i("byz", "downX = " + mDownX + ", moveX = " + event.getX());
-            int dis = (int) (mDownX - event.getX());
-            if (state == STATE_OPEN) {
-                dis += mMenuView.getWidth();
-            }
-            swipe(dis);
-            break;
-        case MotionEvent.ACTION_UP:
-            if (isFling || (mDownX - event.getX()) > (mMenuView.getWidth() / 2f)) {
-                // open
-                smoothOpenMenu();
-            } else {
-                // close
-                smoothCloseMenu();
-                return false;
-            }
-            break;
+            case MotionEvent.ACTION_DOWN:
+                mDownX = (int) event.getX();
+                isFling = false;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                // Log.i("byz", "downX = " + mDownX + ", moveX = " + event.getX());
+                int dis = (int) (mDownX - event.getX());
+                if (state == STATE_OPEN) {
+                    dis += mMenuView.getWidth();
+                }
+                swipe(dis);
+                break;
+            case MotionEvent.ACTION_UP:
+                if (isFling || (mDownX - event.getX()) > (mMenuView.getWidth() / 2f)) {
+                    // open
+                    smoothOpenMenu();
+                } else {
+                    // close
+                    smoothCloseMenu();
+                    return false;
+                }
+                break;
         }
         return true;
     }

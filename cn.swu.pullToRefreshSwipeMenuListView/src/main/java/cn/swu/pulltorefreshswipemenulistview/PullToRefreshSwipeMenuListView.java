@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
+
 import cn.swu.pulltorefresh.PullToRefreshListFooter;
 import cn.swu.pulltorefresh.PullToRefreshListHeader;
 import cn.swu.swipemenulistview.SwipeMenu;
@@ -101,8 +102,8 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         super.setOnScrollListener(this);
         // init header view
         mHeaderView = new PullToRefreshListHeader(context);
-        mHeaderViewContent = (RelativeLayout) mHeaderView.findViewById(R.id.xlistview_header_content);
-        mHeaderTimeView = (TextView) mHeaderView.findViewById(R.id.xlistview_header_time);
+        mHeaderViewContent = mHeaderView.findViewById(R.id.xlistview_header_content);
+        mHeaderTimeView = mHeaderView.findViewById(R.id.xlistview_header_time);
         addHeaderView(mHeaderView);
 
         // init footer view
@@ -325,11 +326,11 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         this.mOnSwipeListener = onSwipeListener;
     }
 
-    public static interface OnMenuItemClickListener {
+    public interface OnMenuItemClickListener {
         void onMenuItemClick(int position, SwipeMenu menu, int index);
     }
 
-    public static interface OnSwipeListener {
+    public interface OnSwipeListener {
         void onSwipeStart(int position);
 
         void onSwipeEnd(int position);
@@ -514,15 +515,15 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
      * onXScrolling when header/footer scroll back.
      */
     public interface OnXScrollListener extends OnScrollListener {
-        public void onXScrolling(View view);
+        void onXScrolling(View view);
     }
 
     /**
      * implements this interface to get refresh/load more event.
      */
     public interface IXListViewListener {
-        public void onRefresh();
+        void onRefresh();
 
-        public void onLoadMore();
+        void onLoadMore();
     }
 }
