@@ -1,22 +1,10 @@
-Properties localProperties = new Properties()
-localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
-
-ext {
-    //定义maven 私服账号
-    nexus_snapshots = localProperties.getProperty("nexus_snapshots")
-    nexus_third = localProperties.getProperty("nexus_third")
-    nexus_user = localProperties.getProperty("nexus_user")
-    nexus_pwd = localProperties.getProperty("nexus_pwd")
-}
 
 ext {
     gradlesPath = rootProject.rootDir.getAbsolutePath() + "/gradles/"
-}
-
-ext {
     //统一定义依赖组件版本号
     jacksonVersion = "2.9.7"
     guavaVersion = "19.0"
     jodatimeVersion = "2.9.9"
-    nettyVersion = "4.1.39.Final"
+    nettyVersion = "4.1.42.Final"
+    meJavaLibraryVersion = "1.0.0"
 }

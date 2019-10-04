@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: 'android-apt'
 
 //JVM 版本号要求
 sourceCompatibility = 1.8
