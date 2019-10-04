@@ -69,10 +69,6 @@ configure(isLib()) {
     dependencies {
         api "com.android.support:appcompat-v7:" + rootProject.ext.androidAppcompatV7
     }
-
-}
-configure(isApp()) {
-    apply from: gradlesPath + "android-app.gradle"
 }
 
 
