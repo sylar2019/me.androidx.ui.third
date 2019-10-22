@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item type="id" name="gridview" />
-    <item type="id" name="webview" />
-    <item type="id" name="scrollview" />
-    <item type="id" name="viewpager" />
-    
-    <item type="id" name="staggeredgridview" />
+    <item name="gridview" type="id" />
+    <item name="webview" type="id" />
+    <item name="scrollview" type="id" />
+    <item name="viewpager" type="id" />
+
+    <item name="staggeredgridview" type="id" />
 
 </resources>

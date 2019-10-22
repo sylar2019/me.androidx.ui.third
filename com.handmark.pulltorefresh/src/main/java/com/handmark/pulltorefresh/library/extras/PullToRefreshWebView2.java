@@ -65,22 +65,19 @@ public class PullToRefreshWebView2 extends PullToRefreshWebView {
     static final String JS_INTERFACE_PKG = "ptr";
     static final String DEF_JS_READY_PULL_DOWN_CALL = "javascript:isReadyForPullDown();";
     static final String DEF_JS_READY_PULL_UP_CALL = "javascript:isReadyForPullUp();";
+    private final AtomicBoolean mIsReadyForPullDown = new AtomicBoolean(false);
+    private final AtomicBoolean mIsReadyForPullUp = new AtomicBoolean(false);
+    private JsValueCallback mJsCallback;
 
     public PullToRefreshWebView2(Context context) {
         super(context);
     }
-
     public PullToRefreshWebView2(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
     public PullToRefreshWebView2(Context context, Mode mode) {
         super(context, mode);
     }
-
-    private JsValueCallback mJsCallback;
-    private final AtomicBoolean mIsReadyForPullDown = new AtomicBoolean(false);
-    private final AtomicBoolean mIsReadyForPullUp = new AtomicBoolean(false);
 
     @JavascriptInterface
     @Override

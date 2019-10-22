@@ -30,16 +30,16 @@ public class SwipeMenuItem {
         return titleColor;
     }
 
+    public void setTitleColor(int titleColor) {
+        this.titleColor = titleColor;
+    }
+
     public int getTitleSize() {
         return titleSize;
     }
 
     public void setTitleSize(int titleSize) {
         this.titleSize = titleSize;
-    }
-
-    public void setTitleColor(int titleColor) {
-        this.titleColor = titleColor;
     }
 
     public String getTitle() {

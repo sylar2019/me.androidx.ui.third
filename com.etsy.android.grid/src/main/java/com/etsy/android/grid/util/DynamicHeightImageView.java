@@ -19,15 +19,15 @@ public class DynamicHeightImageView extends ImageView {
         super(context);
     }
 
+    public double getHeightRatio() {
+        return mHeightRatio;
+    }
+
     public void setHeightRatio(double ratio) {
         if (ratio != mHeightRatio) {
             mHeightRatio = ratio;
             requestLayout();
         }
-    }
-
-    public double getHeightRatio() {
-        return mHeightRatio;
     }
 
     @Override
@@ -37,8 +37,7 @@ public class DynamicHeightImageView extends ImageView {
             int width = MeasureSpec.getSize(widthMeasureSpec);
             int height = (int) (width * mHeightRatio);
             setMeasuredDimension(width, height);
-        }
-        else {
+        } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }

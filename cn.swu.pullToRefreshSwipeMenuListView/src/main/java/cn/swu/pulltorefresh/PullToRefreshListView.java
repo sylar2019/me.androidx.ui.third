@@ -18,13 +18,18 @@ import cn.swu.pulltorefreshswipemenulistview.R;
 
 public class PullToRefreshListView extends ListView implements OnScrollListener {
 
+    private final static int SCROLLBACK_HEADER = 0;
+    private final static int SCROLLBACK_FOOTER = 1;
+    private final static int SCROLL_DURATION = 400; // scroll back duration
+    private final static int PULL_LOAD_MORE_DELTA = 50; // when pull up >= 50px
+    // at bottom, trigger
+    // load more.
+    private final static float OFFSET_RADIO = 1.8f; // support iOS like pull
     private float mLastY = -1; // save event y
     private Scroller mScroller; // used for scroll back
     private OnScrollListener mScrollListener; // user's scroll listener
-
     // the interface to trigger refresh and load more.
     private IXListViewListener mListViewListener;
-
     // -- header view
     private PullToRefreshListHeader mHeaderView;
     // header view content, use it to calculate the Header's height. And hide it
@@ -34,27 +39,16 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private int mHeaderViewHeight; // header view's height
     private boolean mEnablePullRefresh = true;
     private boolean mPullRefreshing = false; // is refreashing.
-
     // -- footer view
     private PullToRefreshListFooter mFooterView;
     private boolean mEnablePullLoad;
     private boolean mPullLoading;
     private boolean mIsFooterReady = false;
-
     // total list items, used to detect is at the bottom of listview.
     private int mTotalItemCount;
-
     // for mScroller, scroll back from header or footer.
     private int mScrollBack;
-    private final static int SCROLLBACK_HEADER = 0;
-    private final static int SCROLLBACK_FOOTER = 1;
-
-    private final static int SCROLL_DURATION = 400; // scroll back duration
-    private final static int PULL_LOAD_MORE_DELTA = 50; // when pull up >= 50px
-                                                        // at bottom, trigger
-                                                        // load more.
-    private final static float OFFSET_RADIO = 1.8f; // support iOS like pull
-                                                    // feature.
+    // feature.
 
     /**
      * @param context
@@ -82,8 +76,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
         // init header view
         mHeaderView = new PullToRefreshListHeader(context);
-        mHeaderViewContent = (RelativeLayout) mHeaderView.findViewById(R.id.xlistview_header_content);
-        mHeaderTimeView = (TextView) mHeaderView.findViewById(R.id.xlistview_header_time);
+        mHeaderViewContent = mHeaderView.findViewById(R.id.xlistview_header_content);
+        mHeaderTimeView = mHeaderView.findViewById(R.id.xlistview_header_time);
         addHeaderView(mHeaderView);
 
         // init footer view
@@ -111,7 +105,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
     /**
      * enable or disable pull down refresh feature.
-     * 
+     *
      * @param enable
      */
     public void setPullRefreshEnable(boolean enable) {
@@ -125,7 +119,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
     /**
      * enable or disable pull up load more feature.
-     * 
+     *
      * @param enable
      */
     public void setPullLoadEnable(boolean enable) {
@@ -169,7 +163,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
     /**
      * set last refresh time
-     * 
+     *
      * @param time
      */
     public void setRefreshTime(String time) {
@@ -221,7 +215,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         int height = mFooterView.getBottomMargin() + (int) delta;
         if (mEnablePullLoad && !mPullLoading) {
             if (height > PULL_LOAD_MORE_DELTA) { // height enough to invoke load
-                                                 // more.
+                // more.
                 mFooterView.setState(PullToRefreshListFooter.STATE_READY);
             } else {
                 mFooterView.setState(PullToRefreshListFooter.STATE_NORMAL);
@@ -256,38 +250,38 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         }
 
         switch (ev.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            mLastY = ev.getRawY();
-            break;
-        case MotionEvent.ACTION_MOVE:
-            final float deltaY = ev.getRawY() - mLastY;
-            mLastY = ev.getRawY();
-            if ((mFooterView.getBottomMargin() > 0 || deltaY < 0)) {
-                // last item, already pulled up or want to pull up.
-                updateFooterHeight(-deltaY / OFFSET_RADIO);
-            } else if (getFirstVisiblePosition() == 0 && (mHeaderView.getVisiableHeight() > 0 || deltaY > 0)) {
-                // the first item is showing, header has shown or pull down.
-                updateHeaderHeight(deltaY / OFFSET_RADIO);
-                invokeOnScrolling();
-            }
-            break;
-        default:
-            mLastY = -1; // reset
-            if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
-                startLoadMore();
-                resetFooterHeight();
-            } else if (getFirstVisiblePosition() == 0) {
-                // invoke refresh
-                if (mEnablePullRefresh && mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
-                    mPullRefreshing = true;
-                    mHeaderView.setState(PullToRefreshListHeader.STATE_REFRESHING);
-                    if (mListViewListener != null) {
-                        mListViewListener.onRefresh();
-                    }
+            case MotionEvent.ACTION_DOWN:
+                mLastY = ev.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                final float deltaY = ev.getRawY() - mLastY;
+                mLastY = ev.getRawY();
+                if ((mFooterView.getBottomMargin() > 0 || deltaY < 0)) {
+                    // last item, already pulled up or want to pull up.
+                    updateFooterHeight(-deltaY / OFFSET_RADIO);
+                } else if (getFirstVisiblePosition() == 0 && (mHeaderView.getVisiableHeight() > 0 || deltaY > 0)) {
+                    // the first item is showing, header has shown or pull down.
+                    updateHeaderHeight(deltaY / OFFSET_RADIO);
+                    invokeOnScrolling();
                 }
-                resetHeaderHeight();
-            }
-            break;
+                break;
+            default:
+                mLastY = -1; // reset
+                if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
+                    startLoadMore();
+                    resetFooterHeight();
+                } else if (getFirstVisiblePosition() == 0) {
+                    // invoke refresh
+                    if (mEnablePullRefresh && mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
+                        mPullRefreshing = true;
+                        mHeaderView.setState(PullToRefreshListHeader.STATE_REFRESHING);
+                        if (mListViewListener != null) {
+                            mListViewListener.onRefresh();
+                        }
+                    }
+                    resetHeaderHeight();
+                }
+                break;
         }
         return super.onTouchEvent(ev);
     }
@@ -336,15 +330,15 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
      * onXScrolling when header/footer scroll back.
      */
     public interface OnXScrollListener extends OnScrollListener {
-        public void onXScrolling(View view);
+        void onXScrolling(View view);
     }
 
     /**
      * implements this interface to get refresh/load more event.
      */
     public interface IXListViewListener {
-        public void onRefresh();
+        void onRefresh();
 
-        public void onLoadMore();
+        void onLoadMore();
     }
 }

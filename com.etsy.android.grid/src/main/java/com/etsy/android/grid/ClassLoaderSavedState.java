@@ -26,8 +26,23 @@ import android.os.Parcelable;
  * hierarchies to ensure the state of all classes along the chain is saved.
  */
 public abstract class ClassLoaderSavedState implements Parcelable {
-    public static final ClassLoaderSavedState EMPTY_STATE = new ClassLoaderSavedState() {};
+    public static final ClassLoaderSavedState EMPTY_STATE = new ClassLoaderSavedState() {
+    };
+    public static final Parcelable.Creator<ClassLoaderSavedState> CREATOR
+            = new Parcelable.Creator<ClassLoaderSavedState>() {
 
+        public ClassLoaderSavedState createFromParcel(Parcel in) {
+            Parcelable superState = in.readParcelable(null);
+            if (superState != null) {
+                throw new IllegalStateException("superState must be null");
+            }
+            return EMPTY_STATE;
+        }
+
+        public ClassLoaderSavedState[] newArray(int size) {
+            return new ClassLoaderSavedState[size];
+        }
+    };
     private Parcelable mSuperState = EMPTY_STATE;
     private ClassLoader mClassLoader;
 
@@ -48,8 +63,7 @@ public abstract class ClassLoaderSavedState implements Parcelable {
         mClassLoader = classLoader;
         if (superState == null) {
             throw new IllegalArgumentException("superState must not be null");
-        }
-        else {
+        } else {
             mSuperState = superState != EMPTY_STATE ? superState : null;
         }
     }
@@ -76,20 +90,4 @@ public abstract class ClassLoaderSavedState implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(mSuperState, flags);
     }
-
-    public static final Parcelable.Creator<ClassLoaderSavedState> CREATOR
-            = new Parcelable.Creator<ClassLoaderSavedState>() {
-
-        public ClassLoaderSavedState createFromParcel(Parcel in) {
-            Parcelable superState = in.readParcelable(null);
-            if (superState != null) {
-                throw new IllegalStateException("superState must be null");
-            }
-            return EMPTY_STATE;
-        }
-
-        public ClassLoaderSavedState[] newArray(int size) {
-            return new ClassLoaderSavedState[size];
-        }
-    };
 }

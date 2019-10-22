@@ -14,15 +14,19 @@ import java.util.Map;
 @SuppressLint("UseSparseArrays")
 public class PullToRefreshListAdapter extends BaseAdapter {
 
-    Context context;
     public static CheckBox check;
     public static ArrayList<HashMap<String, Object>> listData;
+    Context context;
     HashMap<Integer, Boolean> state = new HashMap<Integer, Boolean>();
     @SuppressLint("UseSparseArrays")
     Map<Integer, Boolean> map_state = new HashMap<Integer, Boolean>();
 
     public PullToRefreshListAdapter(Context context, ArrayList<HashMap<String, Object>> listData) {
         this.context = context;
+    }
+
+    public static void selectAll() {
+        check.setChecked(true);
     }
 
     @Override
@@ -41,10 +45,6 @@ public class PullToRefreshListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         // TODO Auto-generated method stub
         return position;
-    }
-
-    public static void selectAll() {
-        check.setChecked(true);
     }
 
     @Override

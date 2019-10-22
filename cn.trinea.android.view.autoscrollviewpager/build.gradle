@@ -1,5 +1,4 @@
-
- uploadArchives {
+uploadArchives {
     repositories {
         mavenDeployer {
             pom.artifactId = "cn.trinea.android.view.autoscrollviewpager"

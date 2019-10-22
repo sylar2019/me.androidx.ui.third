@@ -33,15 +33,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
  * {@link #onCreatePullToRefreshListView(LayoutInflater, Bundle)}. If you wish
  * to customise the {@code PullToRefreshExpandableListView} then override this
  * method and return your customised instance.
- * 
+ *
  * @author Chris Banes
- * 
  */
 public class PullToRefreshExpandableListFragment extends PullToRefreshBaseListFragment<PullToRefreshExpandableListView> {
 
-	protected PullToRefreshExpandableListView onCreatePullToRefreshListView(LayoutInflater inflater,
-			Bundle savedInstanceState) {
-		return new PullToRefreshExpandableListView(getActivity());
-	}
+    protected PullToRefreshExpandableListView onCreatePullToRefreshListView(LayoutInflater inflater,
+                                                                            Bundle savedInstanceState) {
+        return new PullToRefreshExpandableListView(getActivity());
+    }
 
 }

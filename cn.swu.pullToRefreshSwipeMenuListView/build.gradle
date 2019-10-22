@@ -1,4 +1,4 @@
- uploadArchives {
+uploadArchives {
     repositories {
         mavenDeployer {
             pom.artifactId = "cn.swu.pulltorefreshswipemenulistview"

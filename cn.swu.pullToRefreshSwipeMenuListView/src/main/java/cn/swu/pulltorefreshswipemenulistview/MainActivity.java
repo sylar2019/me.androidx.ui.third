@@ -34,7 +34,6 @@ import cn.swu.swipemenulistview.SwipeMenuCreator;
 import cn.swu.swipemenulistview.SwipeMenuItem;
 
 /**
- * 
  * @author licaomeng
  * @date Jul 14, 2015
  * @blog http://blog.csdn.net/licaomengrice
@@ -53,7 +52,7 @@ public class MainActivity extends Activity implements IXListViewListener {
 
         mAppList = getPackageManager().getInstalledApplications(0);
 
-        mListView = (PullToRefreshSwipeMenuListView) findViewById(R.id.listView);
+        mListView = findViewById(R.id.listView);
         mAdapter = new AppAdapter();
         mListView.setAdapter(mAdapter);
         mListView.setPullRefreshEnable(true);
@@ -102,16 +101,16 @@ public class MainActivity extends Activity implements IXListViewListener {
             public void onMenuItemClick(int position, SwipeMenu menu, int index) {
                 ApplicationInfo item = mAppList.get(position);
                 switch (index) {
-                case 0:
-                    // open
-                    open(item);
-                    break;
-                case 1:
-                    // delete
-                    // delete(item);
-                    mAppList.remove(position);
-                    mAdapter.notifyDataSetChanged();
-                    break;
+                    case 0:
+                        // open
+                        open(item);
+                        break;
+                    case 1:
+                        // delete
+                        // delete(item);
+                        mAppList.remove(position);
+                        mAdapter.notifyDataSetChanged();
+                        break;
                 }
             }
         });
@@ -203,6 +202,10 @@ public class MainActivity extends Activity implements IXListViewListener {
         }
     }
 
+    private int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }
+
     class AppAdapter extends BaseAdapter {
 
         @Override
@@ -238,14 +241,10 @@ public class MainActivity extends Activity implements IXListViewListener {
             TextView tv_name;
 
             public ViewHolder(View view) {
-                iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
-                tv_name = (TextView) view.findViewById(R.id.tv_name);
+                iv_icon = view.findViewById(R.id.iv_icon);
+                tv_name = view.findViewById(R.id.tv_name);
                 view.setTag(this);
             }
         }
-    }
-
-    private int dp2px(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 }

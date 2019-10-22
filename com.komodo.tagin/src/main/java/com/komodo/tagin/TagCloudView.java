@@ -20,20 +20,6 @@ import java.util.List;
 
 public class TagCloudView extends RelativeLayout {
 
-    public abstract interface OnTagClickCallback {
-        void onTagClick(Tag tag);
-    }
-
-    public static float[] convertColorArray(int color) {
-        int r = Color.red(color);
-        int g = Color.green(color);
-        int b = Color.blue(color);
-        int a = Color.alpha(color);
-
-        float[] f = {r / 255f, g / 255f, b / 255f, a / 255f};
-        return f;
-    }
-
     final float TOUCH_SCALE_FACTOR = 0.8f;  //0.8f
     final float TRACKBALL_SCALE_FACTOR = 10; //10
     final float[] tempColor1 = {0.9412f, 0.7686f, 0.2f, 1};
@@ -42,31 +28,27 @@ public class TagCloudView extends RelativeLayout {
     //{0.3882f,0.21568f,0.0f,1} orange
     //{0.9412f,0.7686f,0.2f,1} light orange
     final float[] tempColor2 = {1f, 0f, 0f, 1};
+    float mAngleX = 0;
+    float mAngleY = 0;
     //rgb Alpha
     //{0f,0f,1f,1}  blue
     //{0.1294f,0.1294f,0.1294f,1} grey
     //{0.9412f,0.7686f,0.2f,1} light orange
-
-    float mAngleX = 0;
-    float mAngleY = 0;
     float centerX, centerY;
     float radius;
     int shiftLeft;
     int textSizeMin = 6;
     int textSizeMax = 34;
     float tspeed = 1;
-
     float dx = 100;
     float dy = 100;
-//    boolean isAuto = true;
-//    float oldX, oldY;
-
     Context mContext;
     TagCloud mTagCloud;
+    //    boolean isAuto = true;
+//    float oldX, oldY;
     List<TextView> mTextView;
     List<RelativeLayout.LayoutParams> mParams;
     OnTagClickCallback tagClickCallback;
-
 
     public TagCloudView(Context context) {
         super(context);
@@ -78,9 +60,19 @@ public class TagCloudView extends RelativeLayout {
         init(context, attrs);
     }
 
+
     public TagCloudView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
+    }
+
+    public static float[] convertColorArray(int color) {
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        int a = Color.alpha(color);
+
+        return new float[]{r / 255f, g / 255f, b / 255f, a / 255f};
     }
 
     @Override
@@ -113,7 +105,6 @@ public class TagCloudView extends RelativeLayout {
         return result;
     }
 
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -141,8 +132,8 @@ public class TagCloudView extends RelativeLayout {
         mTagCloud.setTagColor2(color2);
 
         removeAllViews();
-        mTextView = new ArrayList<TextView>();
-        mParams = new ArrayList<RelativeLayout.LayoutParams>();
+        mTextView = new ArrayList<>();
+        mParams = new ArrayList<>();
 
         tagList = filter(tagList);
         mTagCloud.setTags(filter(tagList));
@@ -237,6 +228,37 @@ public class TagCloudView extends RelativeLayout {
         return true;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        float x = e.getX();
+        float y = e.getY();
+
+        switch (e.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+                dx = 0;
+                dy = 0;
+                break;
+            case MotionEvent.ACTION_UP:
+                dx = x - centerX;
+                dy = y - centerY;
+                mAngleX = (dy / radius) * tspeed * TOUCH_SCALE_FACTOR;
+                mAngleY = (-dx / radius) * tspeed * TOUCH_SCALE_FACTOR;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                dx = x - centerX;
+                dy = y - centerY;
+                mAngleX = (dy / radius) * tspeed * TOUCH_SCALE_FACTOR;
+                mAngleY = (-dx / radius) * tspeed * TOUCH_SCALE_FACTOR;
+                refresh();
+
+                break;
+
+        }
+
+        return true;
+    }
+
 //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent e) {
 //
@@ -292,37 +314,6 @@ public class TagCloudView extends RelativeLayout {
 //
 //        return true;
 //    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        float x = e.getX();
-        float y = e.getY();
-
-        switch (e.getAction()) {
-
-            case MotionEvent.ACTION_DOWN:
-                dx = 0;
-                dy = 0;
-                break;
-            case MotionEvent.ACTION_UP:
-                dx = x - centerX;
-                dy = y - centerY;
-                mAngleX = (dy / radius) * tspeed * TOUCH_SCALE_FACTOR;
-                mAngleY = (-dx / radius) * tspeed * TOUCH_SCALE_FACTOR;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                dx = x - centerX;
-                dy = y - centerY;
-                mAngleX = (dy / radius) * tspeed * TOUCH_SCALE_FACTOR;
-                mAngleY = (-dx / radius) * tspeed * TOUCH_SCALE_FACTOR;
-                refresh();
-
-                break;
-
-        }
-
-        return true;
-    }
 
     void autoPlay() {
         postDelayed(new Runnable() {
@@ -384,12 +375,11 @@ public class TagCloudView extends RelativeLayout {
 
     }
 
-
     //the filter function makes sure that there all elements are having unique Text field:
-    List<Tag> filter(List<Tag> tagList) {
+    ArrayList filter(List<Tag> tagList) {
         //current implementation is O(n^2) but since the number of tags are not that many,
         //it is acceptable.
-        List<Tag> tempTagList = new ArrayList();
+        ArrayList tempTagList = new ArrayList();
         Iterator itr = tagList.iterator();
         Iterator itrInternal;
         Tag tempTag1, tempTag2;
@@ -406,12 +396,12 @@ public class TagCloudView extends RelativeLayout {
                     break;
                 }
             }
-            if (found == false)
+            if (!found) {
                 tempTagList.add(tempTag1);
+            }
         }
         return tempTagList;
     }
-
 
     OnClickListener OnTagClickListener(final Tag tag) {
         return new OnClickListener() {
@@ -422,6 +412,11 @@ public class TagCloudView extends RelativeLayout {
                 }
             }
         };
+    }
+
+
+    public interface OnTagClickCallback {
+        void onTagClick(Tag tag);
     }
 
 }

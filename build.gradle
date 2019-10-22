@@ -50,9 +50,6 @@ allprojects {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
-        maven { url RELEASE_REPOSITORY_URL }
-        maven { url SNAPSHOT_REPOSITORY_URL }
-        maven { url THIRD_REPOSITORY_URL }
     }
 }
 

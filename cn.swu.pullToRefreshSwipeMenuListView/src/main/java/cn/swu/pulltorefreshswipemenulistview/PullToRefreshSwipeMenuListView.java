@@ -26,7 +26,6 @@ import cn.swu.swipemenulistview.SwipeMenuLayout;
 import cn.swu.swipemenulistview.SwipeMenuView;
 
 /**
- * 
  * @author licaomeng
  * @date Jul 14, 2015
  * @blog http://blog.csdn.net/licaomengrice
@@ -36,7 +35,11 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
     private static final int TOUCH_STATE_NONE = 0;
     private static final int TOUCH_STATE_X = 1;
     private static final int TOUCH_STATE_Y = 2;
-
+    private final static int SCROLLBACK_HEADER = 0;
+    private final static int SCROLLBACK_FOOTER = 1;
+    private final static int SCROLL_DURATION = 400;
+    private final static int PULL_LOAD_MORE_DELTA = 50;
+    private final static float OFFSET_RADIO = 1.8f;
     private int MAX_Y = 5;
     private int MAX_X = 3;
     private float mDownX;
@@ -45,19 +48,15 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
     private int mTouchPosition;
     private SwipeMenuLayout mTouchView;
     private OnSwipeListener mOnSwipeListener;
-
     private SwipeMenuCreator mMenuCreator;
     private OnMenuItemClickListener mOnMenuItemClickListener;
     private Interpolator mCloseInterpolator;
     private Interpolator mOpenInterpolator;
-
     private float mLastY = -1; // save event y
     private Scroller mScroller; // used for scroll back
     private OnScrollListener mScrollListener; // user's scroll listener
-
     // the interface to trigger refresh and load more.
     private IXListViewListener mListViewListener;
-
     // -- header view
     private PullToRefreshListHeader mHeaderView;
     // header view content, use it to calculate the Header's height. And hide it
@@ -67,7 +66,6 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
     private int mHeaderViewHeight; // header view's height
     private boolean mEnablePullRefresh = true;
     private boolean mPullRefreshing = false; // is refreashing.
-
     // -- footer view
     private PullToRefreshListFooter mFooterView;
     private boolean mEnablePullLoad;
@@ -75,12 +73,6 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
     private boolean mIsFooterReady = false;
     private int mTotalItemCount;
     private int mScrollBack;
-    private final static int SCROLLBACK_HEADER = 0;
-    private final static int SCROLLBACK_FOOTER = 1;
-
-    private final static int SCROLL_DURATION = 400;
-    private final static int PULL_LOAD_MORE_DELTA = 50;
-    private final static float OFFSET_RADIO = 1.8f;
 
     public PullToRefreshSwipeMenuListView(Context context) {
         super(context);
@@ -148,20 +140,20 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         });
     }
 
-    public void setCloseInterpolator(Interpolator interpolator) {
-        mCloseInterpolator = interpolator;
+    public Interpolator getOpenInterpolator() {
+        return mOpenInterpolator;
     }
 
     public void setOpenInterpolator(Interpolator interpolator) {
         mOpenInterpolator = interpolator;
     }
 
-    public Interpolator getOpenInterpolator() {
-        return mOpenInterpolator;
-    }
-
     public Interpolator getCloseInterpolator() {
         return mCloseInterpolator;
+    }
+
+    public void setCloseInterpolator(Interpolator interpolator) {
+        mCloseInterpolator = interpolator;
     }
 
     @Override
@@ -176,123 +168,105 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         }
 
         switch (ev.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            mLastY = ev.getRawY();
+            case MotionEvent.ACTION_DOWN:
+                mLastY = ev.getRawY();
 
-            int oldPos = mTouchPosition;
-            mDownX = ev.getX();
-            mDownY = ev.getY();
-            mTouchState = TOUCH_STATE_NONE;
+                int oldPos = mTouchPosition;
+                mDownX = ev.getX();
+                mDownY = ev.getY();
+                mTouchState = TOUCH_STATE_NONE;
 
-            mTouchPosition = pointToPosition((int) ev.getX(), (int) ev.getY());
+                mTouchPosition = pointToPosition((int) ev.getX(), (int) ev.getY());
 
-            if (mTouchPosition == oldPos && mTouchView != null && mTouchView.isOpen()) {
-                mTouchState = TOUCH_STATE_X;
-                mTouchView.onSwipe(ev);
-                return true;
-            }
-
-            View view = getChildAt(mTouchPosition - getFirstVisiblePosition());
-
-            if (mTouchView != null && mTouchView.isOpen()) {
-                mTouchView.smoothCloseMenu();
-                mTouchView = null;
-                return super.onTouchEvent(ev);
-            }
-            if (view instanceof SwipeMenuLayout) {
-                mTouchView = (SwipeMenuLayout) view;
-            }
-            if (mTouchView != null) {
-                mTouchView.onSwipe(ev);
-            }
-            break;
-        case MotionEvent.ACTION_MOVE:
-            final float deltaY = ev.getRawY() - mLastY;
-            mLastY = ev.getRawY();
-            if ((mFooterView.getBottomMargin() > 0 || deltaY < 0)) {
-                // last item, already pulled up or want to pull up.
-                updateFooterHeight(-deltaY / OFFSET_RADIO);
-            } else if (getFirstVisiblePosition() == 0 && (mHeaderView.getVisiableHeight() > 0 || deltaY > 0)) {
-                // the first item is showing, header has shown or pull down.
-                updateHeaderHeight(deltaY / OFFSET_RADIO);
-                invokeOnScrolling();
-            }
-
-            float dy = Math.abs((ev.getY() - mDownY));
-            float dx = Math.abs((ev.getX() - mDownX));
-            if (mTouchState == TOUCH_STATE_X) {
-                if (mTouchView != null) {
-                    mTouchView.onSwipe(ev);
-                }
-                getSelector().setState(new int[] { 0 });
-                ev.setAction(MotionEvent.ACTION_CANCEL);
-                super.onTouchEvent(ev);
-                return true;
-            } else if (mTouchState == TOUCH_STATE_NONE) {
-                if (Math.abs(dy) > MAX_Y) {
-                    mTouchState = TOUCH_STATE_Y;
-                } else if (dx > MAX_X) {
+                if (mTouchPosition == oldPos && mTouchView != null && mTouchView.isOpen()) {
                     mTouchState = TOUCH_STATE_X;
-                    if (mOnSwipeListener != null) {
-                        mOnSwipeListener.onSwipeStart(mTouchPosition);
-                    }
+                    mTouchView.onSwipe(ev);
+                    return true;
                 }
-            }
-            break;
-        case MotionEvent.ACTION_UP:
-            mLastY = -1; // reset
-            if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
-                startLoadMore();
-                resetFooterHeight();
-                new ResetHeaderHeightTask().execute();
-            } else if (getFirstVisiblePosition() == 0) {
-                // invoke refresh
-                if (mEnablePullRefresh && mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
-                    mPullRefreshing = true;
-                    mHeaderView.setState(PullToRefreshListHeader.STATE_REFRESHING);
-                    if (mListViewListener != null) {
-                        mListViewListener.onRefresh();
-                    }
-                }
-                resetHeaderHeight();
-            }
 
-            if (mTouchState == TOUCH_STATE_X) {
+                View view = getChildAt(mTouchPosition - getFirstVisiblePosition());
+
+                if (mTouchView != null && mTouchView.isOpen()) {
+                    mTouchView.smoothCloseMenu();
+                    mTouchView = null;
+                    return super.onTouchEvent(ev);
+                }
+                if (view instanceof SwipeMenuLayout) {
+                    mTouchView = (SwipeMenuLayout) view;
+                }
                 if (mTouchView != null) {
                     mTouchView.onSwipe(ev);
-                    if (!mTouchView.isOpen()) {
-                        mTouchPosition = -1;
-                        mTouchView = null;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                final float deltaY = ev.getRawY() - mLastY;
+                mLastY = ev.getRawY();
+                if ((mFooterView.getBottomMargin() > 0 || deltaY < 0)) {
+                    // last item, already pulled up or want to pull up.
+                    updateFooterHeight(-deltaY / OFFSET_RADIO);
+                } else if (getFirstVisiblePosition() == 0 && (mHeaderView.getVisiableHeight() > 0 || deltaY > 0)) {
+                    // the first item is showing, header has shown or pull down.
+                    updateHeaderHeight(deltaY / OFFSET_RADIO);
+                    invokeOnScrolling();
+                }
+
+                float dy = Math.abs((ev.getY() - mDownY));
+                float dx = Math.abs((ev.getX() - mDownX));
+                if (mTouchState == TOUCH_STATE_X) {
+                    if (mTouchView != null) {
+                        mTouchView.onSwipe(ev);
+                    }
+                    getSelector().setState(new int[]{0});
+                    ev.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onTouchEvent(ev);
+                    return true;
+                } else if (mTouchState == TOUCH_STATE_NONE) {
+                    if (Math.abs(dy) > MAX_Y) {
+                        mTouchState = TOUCH_STATE_Y;
+                    } else if (dx > MAX_X) {
+                        mTouchState = TOUCH_STATE_X;
+                        if (mOnSwipeListener != null) {
+                            mOnSwipeListener.onSwipeStart(mTouchPosition);
+                        }
                     }
                 }
-                if (mOnSwipeListener != null) {
-                    mOnSwipeListener.onSwipeEnd(mTouchPosition);
+                break;
+            case MotionEvent.ACTION_UP:
+                mLastY = -1; // reset
+                if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
+                    startLoadMore();
+                    resetFooterHeight();
+                    new ResetHeaderHeightTask().execute();
+                } else if (getFirstVisiblePosition() == 0) {
+                    // invoke refresh
+                    if (mEnablePullRefresh && mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
+                        mPullRefreshing = true;
+                        mHeaderView.setState(PullToRefreshListHeader.STATE_REFRESHING);
+                        if (mListViewListener != null) {
+                            mListViewListener.onRefresh();
+                        }
+                    }
+                    resetHeaderHeight();
                 }
-                ev.setAction(MotionEvent.ACTION_CANCEL);
-                super.onTouchEvent(ev);
-                return true;
-            }
-            break;
+
+                if (mTouchState == TOUCH_STATE_X) {
+                    if (mTouchView != null) {
+                        mTouchView.onSwipe(ev);
+                        if (!mTouchView.isOpen()) {
+                            mTouchPosition = -1;
+                            mTouchView = null;
+                        }
+                    }
+                    if (mOnSwipeListener != null) {
+                        mOnSwipeListener.onSwipeEnd(mTouchPosition);
+                    }
+                    ev.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onTouchEvent(ev);
+                    return true;
+                }
+                break;
         }
         return super.onTouchEvent(ev);
-    }
-
-    class ResetHeaderHeightTask extends AsyncTask<Void, Void, Void> {
-        protected Void doInBackground(Void... params) {
-            try {
-                Thread.sleep(400);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            mPullRefreshing = false;
-            mHeaderView.setState(PullToRefreshListHeader.STATE_NORMAL);
-            resetHeaderHeight();
-
-        }
     }
 
     public void smoothOpenMenu(int position) {
@@ -326,16 +300,6 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         this.mOnSwipeListener = onSwipeListener;
     }
 
-    public interface OnMenuItemClickListener {
-        void onMenuItemClick(int position, SwipeMenu menu, int index);
-    }
-
-    public interface OnSwipeListener {
-        void onSwipeStart(int position);
-
-        void onSwipeEnd(int position);
-    }
-
     public void setPullRefreshEnable(boolean enable) {
         mEnablePullRefresh = enable;
         if (!mEnablePullRefresh) { // disable, hide the content
@@ -347,7 +311,7 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
 
     /**
      * enable or disable pull up load more feature.
-     * 
+     *
      * @param enable
      */
     public void setPullLoadEnable(boolean enable) {
@@ -391,7 +355,7 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
 
     /**
      * set last refresh time
-     * 
+     *
      * @param time
      */
     public void setRefreshTime(String time) {
@@ -443,7 +407,7 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         int height = mFooterView.getBottomMargin() + (int) delta;
         if (mEnablePullLoad && !mPullLoading) {
             if (height > PULL_LOAD_MORE_DELTA) { // height enough to invoke load
-                                                 // more.
+                // more.
                 mFooterView.setState(PullToRefreshListFooter.STATE_READY);
             } else {
                 mFooterView.setState(PullToRefreshListFooter.STATE_NORMAL);
@@ -510,6 +474,16 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         mListViewListener = l;
     }
 
+    public interface OnMenuItemClickListener {
+        void onMenuItemClick(int position, SwipeMenu menu, int index);
+    }
+
+    public interface OnSwipeListener {
+        void onSwipeStart(int position);
+
+        void onSwipeEnd(int position);
+    }
+
     /**
      * you can listen ListView.OnScrollListener or this one. it will invoke
      * onXScrolling when header/footer scroll back.
@@ -525,5 +499,23 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         void onRefresh();
 
         void onLoadMore();
+    }
+
+    class ResetHeaderHeightTask extends AsyncTask<Void, Void, Void> {
+        protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(400);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            mPullRefreshing = false;
+            mHeaderView.setState(PullToRefreshListHeader.STATE_NORMAL);
+            resetHeaderHeight();
+
+        }
     }
 }
