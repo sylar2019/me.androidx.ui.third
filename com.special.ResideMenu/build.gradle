@@ -7,4 +7,10 @@ uploadArchives {
     }
 }
 
-
+publishing {
+    publications {
+        bar(MavenPublication) {
+            version = "1.4.2"
+        }
+    }
+}

@@ -6,3 +6,11 @@ uploadArchives {
         }
     }
 }
+
+publishing {
+    publications {
+        bar(MavenPublication) {
+            version = "1.0.3"
+        }
+    }
+}
