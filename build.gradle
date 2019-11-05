@@ -53,6 +53,12 @@ allprojects {
 subprojects {
     apply from: gradlesPath + "const.gradle"
     apply from: gradlesPath + "utils.gradle"
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 /** ******************************************************************************************/
