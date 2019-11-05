@@ -53,23 +53,24 @@ android {
 
 /** ******************************************************************************************/
 
-task androidSourcesJar(type: Jar) {
+task sourceJar(type: Jar) {
     classifier = 'sources'
     from android.sourceSets.main.java.sourceFiles
 }
 
 artifacts {
-    archives androidSourcesJar
+    archives sourceJar
 }
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        bar(MavenPublication) {
             groupId = "$project.group"
             artifactId = "$project.name"
             version = "$project.version"
 
-            artifact androidSourcesJar
+            artifact sourceJar
+            artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
         }
     }
 
@@ -83,6 +84,5 @@ publishing {
         }
     }
 }
-
 
 
