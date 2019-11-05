@@ -1,5 +1,6 @@
 apply plugin: "com.android.library"
 apply plugin: 'maven-publish'
+apply plugin: 'maven'
 
 //JVM 版本号要求
 sourceCompatibility = 1.8
@@ -85,4 +86,17 @@ publishing {
     }
 }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = "$project.group"
+            pom.artifactId = "$project.name"
+            pom.version = "$project.version"
+            repository(url: THIRD_REPOSITORY_URL) {
+                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
+            }
+        }
+    }
+}
 
+uploadArchives.dependsOn(assemble)
