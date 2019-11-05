@@ -27,7 +27,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.5.0"
+        classpath "com.android.tools.build:gradle:3.5.1"
     }
 }
 
@@ -44,9 +44,6 @@ allprojects {
 
     repositories {
         mavenLocal()
-        flatDir {
-            dirs 'libs'
-        }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
