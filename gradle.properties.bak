@@ -18,9 +18,9 @@ android.useAndroidX=true
 android.enableJetifier=true
 
 # nexus
-PUBLIC_REPOSITORY_URL=http://cloud.sylar.ga:8081/nexus/content/repositories/public/
-SNAPSHOT_REPOSITORY_URL=http://cloud.sylar.ga:8081/nexus/content/repositories/snapshots/
-RELEASE_REPOSITORY_URL=http://cloud.sylar.ga:8081/nexus/content/repositories/releases/
-THIRD_REPOSITORY_URL=http://cloud.sylar.ga:8081/nexus/content/repositories/thirdparty/
+PUBLIC_REPOSITORY_URL=http://192.168.1.100:8081/nexus/content/repositories/public/
+RELEASE_REPOSITORY_URL=http://192.168.1.100:8081/nexus/content/repositories/releases/
+SNAPSHOT_REPOSITORY_URL=http://192.168.1.100:8081/nexus/content/repositories/snapshots/
+THIRD_REPOSITORY_URL=http://192.168.1.100:8081/nexus/content/repositories/thirdparty/
 NEXUS_USERNAME=admin
 NEXUS_PASSWORD=admin123

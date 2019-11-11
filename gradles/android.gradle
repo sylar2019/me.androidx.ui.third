@@ -1,22 +1,47 @@
-apply plugin: "com.android.library"
+apply from: gradlesPath + 'const.gradle'
+apply from: gradlesPath + 'utils.gradle'
 apply plugin: 'maven-publish'
 apply plugin: 'maven'
 
-//JVM 版本号要求
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+if (isAndroidApp()) {
+    apply plugin: "com.android.application"
+} else if (isAndroid()) {
+    apply plugin: "com.android.library"
 }
 
+configurations.all {
+    resolutionStrategy {
+        force "com.google.guava:guava:${guavaVersion}"
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    api fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+
+    api "androidx.appcompat:appcompat:${androidxAppcompat}"
+    api "com.android.support:appcompat-v7:" + rootProject.ext.androidAppcompatV7
+
+    testImplementation "junit:junit:${junitVersion}"
+}
+
+/** ******************************************************************************************/
+
 android {
-    compileSdkVersion rootProject.ext.androidCompileSdkVersion
-    buildToolsVersion rootProject.ext.androidBuildToolsVersion
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        compileSdkVersion rootProject.ext.androidCompileSdkVersion
         versionCode 100
         versionName "1.0.0"
     }
@@ -54,30 +79,33 @@ android {
 
 /** ******************************************************************************************/
 
-task sourceJar(type: Jar) {
-    classifier = 'sources'
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
     from android.sourceSets.main.java.sourceFiles
 }
 
 artifacts {
-    archives sourceJar
+    archives androidSourcesJar
 }
+
+/** ******************************************************************************************/
+def repoUrl = THIRD_REPOSITORY_URL
 
 publishing {
     publications {
-        bar(MavenPublication) {
+        maven(MavenPublication) {
             groupId = "$project.group"
             artifactId = "$project.name"
             version = "$project.version"
 
-            artifact sourceJar
+            artifact androidSourcesJar
             artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
         }
     }
 
     repositories {
         maven {
-            url = THIRD_REPOSITORY_URL
+            url = repoUrl
             credentials {
                 username = NEXUS_USERNAME
                 password = NEXUS_PASSWORD
@@ -86,13 +114,17 @@ publishing {
     }
 }
 
+/** ******************************************************************************************/
+
 uploadArchives {
     repositories {
         mavenDeployer {
             pom.groupId = "$project.group"
             pom.artifactId = "$project.name"
             pom.version = "$project.version"
-            repository(url: THIRD_REPOSITORY_URL) {
+
+            def url = repoUrl
+            repository(url: url) {
                 authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
             }
         }

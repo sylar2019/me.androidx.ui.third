@@ -4,11 +4,14 @@ apply from: rootProject.rootDir.getAbsolutePath() + "/gradles/utils.gradle"
 /** ******************************************************************************************/
 
 ext {
+    gradlesPath = rootProject.rootDir.getAbsolutePath() + "/gradles/"
+
     androidBuildToolsVersion = "29.0.1"
     androidSupportV4 = "26.0.1"
     androidAppcompatV7 = "28.0.0"
-    androidMinSdkVersion = 26
-    androidTargetSdkVersion = 26
+    androidxAppcompat = "1.1.0"
+    androidMinSdkVersion = 16
+    androidTargetSdkVersion = 21
     androidCompileSdkVersion = 28
 }
 
@@ -20,14 +23,15 @@ ext {
 buildscript {
     repositories {
         mavenLocal()
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
+
+        maven { url "http://maven.aliyun.com/repository/central/" }
+        maven { url "http://maven.aliyun.com/repository/jcenter/" }
+        maven { url "http://maven.aliyun.com/repository/google/" }
+        maven { url "http://maven.aliyun.com/repository/gradle-plugin/" }
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.5.1"
+        classpath "com.android.tools.build:gradle:3.5.2"
     }
 }
 
@@ -44,31 +48,20 @@ allprojects {
 
     repositories {
         mavenLocal()
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+
+        maven { url "http://maven.aliyun.com/repository/central/" }
+        maven { url "http://maven.aliyun.com/repository/jcenter/" }
+        maven { url "http://maven.aliyun.com/repository/google/" }
     }
 }
 
 subprojects {
-    apply from: gradlesPath + "const.gradle"
-    apply from: gradlesPath + "utils.gradle"
-
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
 }
 
 /** ******************************************************************************************/
 
-configure(isLib()) {
-    apply from: gradlesPath + "android-lib.gradle"
-
-    dependencies {
-        api "com.android.support:appcompat-v7:" + rootProject.ext.androidAppcompatV7
-    }
+configure(getJavaProjects()) {
+    apply from: gradlesPath + "android.gradle"
 }
 
 
