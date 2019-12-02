@@ -11,7 +11,7 @@ ext {
     androidAppcompatV7 = "28.0.0"
     androidxAppcompat = "1.1.0"
     androidMinSdkVersion = 16
-    androidTargetSdkVersion = 21
+    androidTargetSdkVersion = 26
     androidCompileSdkVersion = 28
 }
 
@@ -23,11 +23,10 @@ ext {
 buildscript {
     repositories {
         mavenLocal()
-
-        maven { url "http://maven.aliyun.com/repository/central/" }
-        maven { url "http://maven.aliyun.com/repository/jcenter/" }
-        maven { url "http://maven.aliyun.com/repository/google/" }
-        maven { url "http://maven.aliyun.com/repository/gradle-plugin/" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/jcenter/" }
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin/" }
     }
 
     dependencies {
@@ -48,11 +47,20 @@ allprojects {
 
     repositories {
         mavenLocal()
+        flatDir {
+            dirs 'libs'
+        }
 
-        maven { url "http://maven.aliyun.com/repository/central/" }
-        maven { url "http://maven.aliyun.com/repository/jcenter/" }
-        maven { url "http://maven.aliyun.com/repository/google/" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/jcenter/" }
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://mirrors.huaweicloud.com/repository/maven/" }
     }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
 }
 
 subprojects {

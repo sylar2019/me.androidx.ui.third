@@ -1,6 +1,5 @@
 apply from: gradlesPath + 'const.gradle'
 apply from: gradlesPath + 'utils.gradle'
-apply plugin: 'maven-publish'
 apply plugin: 'maven'
 
 if (isAndroidApp()) {
@@ -40,7 +39,7 @@ android {
 
     defaultConfig {
         minSdkVersion rootProject.ext.androidMinSdkVersion
-        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+//        targetSdkVersion rootProject.ext.androidTargetSdkVersion
         compileSdkVersion rootProject.ext.androidCompileSdkVersion
         versionCode 100
         versionName "1.0.0"
@@ -78,42 +77,6 @@ android {
 }
 
 /** ******************************************************************************************/
-
-task androidSourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-    from android.sourceSets.main.java.sourceFiles
-}
-
-artifacts {
-    archives androidSourcesJar
-}
-
-/** ******************************************************************************************/
-def repoUrl = THIRD_REPOSITORY_URL
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = "$project.group"
-            artifactId = "$project.name"
-            version = "$project.version"
-
-            artifact androidSourcesJar
-            artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
-        }
-    }
-
-    repositories {
-        maven {
-            url = repoUrl
-            credentials {
-                username = NEXUS_USERNAME
-                password = NEXUS_PASSWORD
-            }
-        }
-    }
-}
-
 /** ******************************************************************************************/
 
 uploadArchives {
@@ -123,7 +86,7 @@ uploadArchives {
             pom.artifactId = "$project.name"
             pom.version = "$project.version"
 
-            def url = repoUrl
+            def url = THIRD_REPOSITORY_URL
             repository(url: url) {
                 authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
             }
@@ -131,4 +94,13 @@ uploadArchives {
     }
 }
 
-uploadArchives.dependsOn(assemble)
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.sourceFiles
+}
+artifacts {
+    archives androidSourcesJar
+}
+
+/** ******************************************************************************************/
