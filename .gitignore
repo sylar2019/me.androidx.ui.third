@@ -47,6 +47,7 @@ proguard-rules.pro
 .project
 
 # Intellij project files
+*.iml
 *.ipr
 *.iws
 .idea/
