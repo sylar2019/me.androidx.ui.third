@@ -72,9 +72,11 @@ public class PullToRefreshWebView2 extends PullToRefreshWebView {
     public PullToRefreshWebView2(Context context) {
         super(context);
     }
+
     public PullToRefreshWebView2(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     public PullToRefreshWebView2(Context context, Mode mode) {
         super(context, mode);
     }

@@ -74,13 +74,6 @@ public class ResideMenu extends FrameLayout {
     private int scaleDirection = DIRECTION_LEFT;
     private int pressedState = PRESSED_DOWN;
     private List<Integer> disabledDirection = new ArrayList<Integer>();
-    private OnClickListener viewActivityOnClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (isOpened())
-                closeMenu();
-        }
-    };
     private Animator.AnimatorListener animationListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
@@ -114,6 +107,13 @@ public class ResideMenu extends FrameLayout {
         @Override
         public void onAnimationRepeat(Animator animation) {
 
+        }
+    };
+    private OnClickListener viewActivityOnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (isOpened())
+                closeMenu();
         }
     };
     private float lastActionDownX, lastActionDownY;

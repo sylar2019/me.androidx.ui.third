@@ -47,6 +47,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
     private IndicatorLayout mIndicatorIvBottom;
     private boolean mShowIndicator;
     private boolean mScrollEmptyView = true;
+
     public PullToRefreshAdapterViewBase(Context context) {
         super(context);
         mRefreshableView.setOnScrollListener(this);
