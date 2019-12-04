@@ -1,4 +1,4 @@
-rootProject.name = "me.androidx.ui.third"
+rootProject.name = "meAndroidxUiLibs"
 
 include ":cn.swu.pullToRefreshSwipeMenuListView"
 include ":cn.trinea.android.view.autoscrollviewpager"

@@ -23,6 +23,7 @@ ext {
 buildscript {
     repositories {
         mavenLocal()
+
         maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://maven.aliyun.com/repository/jcenter/" }
         maven { url "https://maven.aliyun.com/repository/google" }
@@ -37,11 +38,6 @@ buildscript {
 /** ******************************************************************************************/
 
 allprojects {
-    //公共插件
-    apply plugin: "eclipse"
-    apply plugin: "idea"
-    apply plugin: 'maven'
-
     group rootProject.name
     version "1.0.0"
 

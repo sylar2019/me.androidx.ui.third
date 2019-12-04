@@ -1,6 +1,6 @@
 apply from: gradlesPath + 'const.gradle'
 apply from: gradlesPath + 'utils.gradle'
-apply plugin: 'maven'
+apply from: gradlesPath + 'maven.gradle'
 
 if (isAndroidApp()) {
     apply plugin: "com.android.application"
@@ -11,12 +11,6 @@ if (isAndroidApp()) {
 configurations.all {
     resolutionStrategy {
         force "com.google.guava:guava:${guavaVersion}"
-    }
-}
-
-repositories {
-    flatDir {
-        dirs 'libs'
     }
 }
 
@@ -77,23 +71,6 @@ android {
 }
 
 /** ******************************************************************************************/
-/** ******************************************************************************************/
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            pom.groupId = "$project.group"
-            pom.artifactId = "$project.name"
-            pom.version = "$project.version"
-
-            def url = THIRD_REPOSITORY_URL
-            repository(url: url) {
-                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
-            }
-        }
-    }
-}
-
 
 task androidSourcesJar(type: Jar) {
     classifier = 'sources'
