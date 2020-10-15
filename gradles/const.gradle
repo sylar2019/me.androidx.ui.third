@@ -1,8 +1,0 @@
-ext {
-    //统一定义依赖组件版本号
-    junitVersion = "4.12"
-    jacksonVersion = "2.9.7"
-    jodatimeVersion = "2.9.9"
-    guavaVersion = "28.1-android"
-    nettyVersion = "4.1.42.Final"
-}

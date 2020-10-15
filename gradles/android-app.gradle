@@ -1,0 +1,49 @@
+apply from: gradlesPath + 'android-lib.gradle'
+
+/** ******************************************************************************************/
+
+android {
+
+    //自动化打包配置
+    signingConfigs {
+        release {
+            keyAlias 'app'
+            keyPassword '123456'
+            storeFile file('app.jks')
+            storePassword '123456'
+        }
+        debug {
+            keyAlias 'app'
+            keyPassword '123456'
+            storeFile file('app.jks')
+            storePassword '123456'
+        }
+    }
+
+
+    //多渠道
+    productFlavors {
+        wandoujia {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+        }
+        xiaomi {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+        }
+        _360 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "_360"]
+        }
+    }
+
+    buildTypes{
+        release{
+            signingConfig signingConfigs.release
+        }
+        debug{
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+
+/** ******************************************************************************************/
+

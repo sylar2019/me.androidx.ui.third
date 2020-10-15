@@ -1,19 +1,9 @@
-apply from: rootProject.rootDir.getAbsolutePath() + "/gradles/const.gradle"
-apply from: rootProject.rootDir.getAbsolutePath() + "/gradles/utils.gradle"
-
-/** ******************************************************************************************/
-
-ext {
-    gradlesPath = rootProject.rootDir.getAbsolutePath() + "/gradles/"
-
-    androidBuildToolsVersion = "29.0.1"
-    androidSupportV4 = "26.0.1"
-    androidAppcompatV7 = "28.0.0"
-    androidxAppcompat = "1.1.0"
-    androidMinSdkVersion = 16
-    androidTargetSdkVersion = 26
-    androidCompileSdkVersion = 28
+ext{
+    rootPath = rootProject.rootDir.getAbsolutePath()
+    gradlesPath = "${rootPath}/gradles/"
 }
+
+apply from: gradlesPath + 'utils.gradle'
 
 /** ******************************************************************************************/
 
@@ -23,40 +13,28 @@ ext {
 buildscript {
     repositories {
         mavenLocal()
-
-        maven { url "https://maven.aliyun.com/repository/public" }
-        maven { url "https://maven.aliyun.com/repository/jcenter/" }
-        maven { url "https://maven.aliyun.com/repository/google" }
-        maven { url "https://maven.aliyun.com/repository/gradle-plugin/" }
+        maven { url REPO_ALIYUN_JCENTER }
+        maven { url REPO_ALIYUN_GOOGLE }
+        maven { url REPO_ALIYUN_GRADLE_PLUGIN }
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.5.2"
+        classpath "com.android.tools.build:gradle:${androidGradlePluginVersion}"
     }
 }
 
 /** ******************************************************************************************/
-
 allprojects {
     group rootProject.name
-    version "1.0.0"
+    version "${projectVersion}"
 
     repositories {
         mavenLocal()
-        flatDir {
-            dirs 'libs'
-        }
+        maven { url REPO_ALIYUN_PUBLIC }
+        maven { url REPO_ALIYUN_JCENTER }
+        maven { url REPO_ALIYUN_GOOGLE }
 
-        maven { url "https://maven.aliyun.com/repository/public" }
-        maven { url "https://maven.aliyun.com/repository/jcenter/" }
-        maven { url "https://maven.aliyun.com/repository/google" }
-        maven { url "https://mirrors.huaweicloud.com/repository/maven/" }
     }
-
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    }
-
 }
 
 subprojects {
@@ -65,7 +43,7 @@ subprojects {
 /** ******************************************************************************************/
 
 configure(getJavaProjects()) {
-    apply from: gradlesPath + "android.gradle"
+    apply from: gradlesPath + "android-lib.gradle"
 }
 
 

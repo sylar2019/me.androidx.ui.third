@@ -1,4 +1,14 @@
+/**
+ * ### 脚本说明 ###
+ * 工具定义
+ */
+
+
+apply plugin: 'idea'
+
 ext {
+    appPath = buildDir.getParentFile().getAbsolutePath()
+
     isAndroidApp = this.&isAndroidApp
     isApp = this.&isApp
     isAndroid = this.&isAndroid
@@ -8,6 +18,7 @@ ext {
     getAppProjects = this.&getAppProjects
     getJavaProjects = this.&getJavaProjects
 }
+
 
 def isAndroidApp() {
     return isAndroid() && isApp()
